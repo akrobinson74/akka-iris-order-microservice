@@ -2,15 +2,20 @@ package com.olx.iris.model
 import java.time.ZonedDateTime
 
 case class Product(
-  currency: String = "CRD",
+  activationTime: ZonedDateTime,
+  category: ProductCategory,
+//  currency: String = "CRD",
   description: String,
-  discountAmount: Option[BigDecimal],
-  expiryDateTime: Option[ZonedDateTime],
+//  discountAmount: Option[BigDecimal],
+  expirationTime: ZonedDateTime,
   grossPrice: BigDecimal = BigDecimal(0.00),
-  netPrice: Option[BigDecimal],
-  productType: ProductType,
+  name: String,
+//  netPrice: Option[BigDecimal],
+  orderItemId: String,
+  packageId: String,
+  revenueClass: RevenueClass,
+  skuId: String,
+  `type`: ProductType,
   unitPrice: BigDecimal = BigDecimal(1.00),
-  units: BigInt,
-  vatAmount: Option[BigDecimal],
-  vatPercentage: BigDecimal = BigDecimal(0.00)) {
-}
+  units: BigInt
+)

@@ -1,4 +1,4 @@
-package com.spr.akka
+package com.olx.iris.akkaHttp
 
 import akka.actor.ActorRefFactory
 import akka.stream.Materializer
@@ -6,11 +6,7 @@ import akka.util.Timeout
 
 import scala.concurrent.ExecutionContextExecutor
 
-/**
-  * Mix-in for pulling in Akka-related classes and configuration.
-  */
-trait AkkaConfiguration {
-
+trait MyAkkaConfiguration {
   /** Provides either an ActorSystem or ActorContext for spawning actors. */
   implicit val actorRefFactory: ActorRefFactory
   /** Provides a stream materializer for executing streams. */
@@ -19,7 +15,6 @@ trait AkkaConfiguration {
   implicit val executionContext: ExecutionContextExecutor = actorRefFactory.dispatcher
   /** Provides a default timeout for the ask pattern. */
   implicit val askTimeout: Timeout
-
 }
 
 /**
@@ -33,8 +28,8 @@ trait AkkaConfiguration {
   *   val foo = new ImplicitAkkaConfiguration with Foo
   * }}}
   */
-class ImplicitAkkaConfiguration(implicit
+class MyImplicitAkkaConfiguration(implicit
   override val actorRefFactory: ActorRefFactory,
   override val materializer: Materializer,
   override val askTimeout: Timeout
-) extends AkkaConfiguration
+) extends MyAkkaConfiguration

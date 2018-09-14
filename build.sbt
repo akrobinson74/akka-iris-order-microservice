@@ -14,13 +14,14 @@ scalacOptions in (Compile, console) ~= filterExcludedReplOptions
 lazy val akkaVersion = "2.5.16"
 lazy val akkaHttpVersion = "10.1.5"
 lazy val circeVersion = "0.9.3"
-lazy val akkaJsonVersion = "1.21.0"
+lazy val akkaJsonVersion = "1.20.1"
 
 libraryDependencies ++= Seq(
   "akka-actor",
   "akka-persistence",
   "akka-stream"
 ).map { "com.typesafe.akka" %% _ % akkaVersion } ++ Seq(
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-http-xml" % akkaHttpVersion,

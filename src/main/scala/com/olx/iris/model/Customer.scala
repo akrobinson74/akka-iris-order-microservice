@@ -9,5 +9,5 @@ case class Customer(
   language: String,
   lastName: String,
   userId: String,
-  vatData: VatData
+  vatNumber: Option[String]
 )

@@ -3,14 +3,13 @@ package com.olx.iris
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server._
 import akka.pattern.ask
-import com.olx.iris.model.{ Transaction, TransactionId }
-import com.spr.akka.{ AkkaConfiguration, RestApi }
+import com.olx.iris.akkaHttp.{MyAkkaConfiguration, NoCirceRestApi}
+import com.olx.iris.model.{Transaction, TransactionEntity, TransactionId}
 
 import scala.concurrent.Future
 
-trait OrderService extends AkkaConfiguration {
+trait OrderService extends MyAkkaConfiguration {
 
-  import com.olx.iris.model._
   import com.olx.iris.model.TransactionEntity._
 
   private val transactionEntity = actorRefFactory.actorOf(TransactionEntity.props)
@@ -25,7 +24,7 @@ trait OrderService extends AkkaConfiguration {
     (transactionEntity ? UpdateTransaction(id, transaction)).mapTo[MaybeTransaction[TransactionUpdated]]
 }
 
-trait OrderRestApi extends RestApi with JsonMappings with OrderService {
+trait OrderRestApi extends NoCirceRestApi with OrderService {
   override def route: Route =
     pathPrefix("/orders") {
       (pathEndOrSingleSlash & post) {

@@ -3,7 +3,7 @@ package com.olx.iris
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
-import com.spr.akka.{ImplicitAkkaConfiguration, RestApiServer}
+import com.olx.iris.akkaHttp.{MyImplicitAkkaConfiguration, RestApiServer}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -14,7 +14,7 @@ object Main {
     implicit val system = ActorSystem()
     implicit val materializer = ActorMaterializer()
     implicit val timeout = Timeout(10.seconds)
-    val api = new ImplicitAkkaConfiguration with OrderRestApi
+    val api = new MyImplicitAkkaConfiguration with OrderRestApi
     val server = new RestApiServer(api)
     val bindingF = server.bind()
     sys.addShutdownHook {
