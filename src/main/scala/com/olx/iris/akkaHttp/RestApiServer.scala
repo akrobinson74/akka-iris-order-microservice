@@ -13,7 +13,7 @@ import scala.concurrent.Future
 /**
   * Provides an HTTP server using a given RestApi.
   */
-class RestApiServer(api: NoCirceRestApi)(implicit system: ActorSystem, materializer: Materializer) {
+class RestApiServer(api: SprayRestApi)(implicit system: ActorSystem, materializer: Materializer) {
 
   def bind(): Future[ServerBinding] = {
     val config = ConfigFactory.load()

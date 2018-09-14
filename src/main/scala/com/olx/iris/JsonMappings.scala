@@ -25,7 +25,7 @@ trait JsonMappings extends SprayJsonSupport with DerivedJsonMappings {
   implicit val customerFormat = jsonFormat9(Customer)
   implicit val paymentReferenceFormat = jsonFormat2(PaymentReference)
   implicit val productFormat = jsonFormat13(Product)
-  implicit val transactionFormat = jsonFormat4(Transaction)
+  implicit val transactionFormat = jsonFormat4(Order)
   implicit val transactionAddedFormat = jsonFormat2(TransactionAdded)
   implicit val transactionUpdatedFormat = jsonFormat2(TransactionUpdated)
 }

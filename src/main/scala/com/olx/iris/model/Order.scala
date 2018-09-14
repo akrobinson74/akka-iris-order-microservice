@@ -1,8 +1,8 @@
 package com.olx.iris.model
 
-final case class Transaction(
+final case class Order(
   customer: Customer,
+  orderId: String,
   paymentReference: PaymentReference,
-  products: List[Product],
-  transactionReference: String
+  products: List[Product]
 )
