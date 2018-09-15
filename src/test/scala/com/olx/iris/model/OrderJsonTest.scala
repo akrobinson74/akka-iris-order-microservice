@@ -7,7 +7,7 @@ import com.olx.iris.JsonMappings
 import org.scalatest.FunSuite
 import spray.json._
 
-class OrderTest extends FunSuite with JsonMappings {
+class OrderJsonTest extends FunSuite with JsonMappings {
 
   test("Kotlin Iris payload can be deserialized") {
     val nowInstant = Instant.now()
@@ -117,5 +117,7 @@ class OrderTest extends FunSuite with JsonMappings {
 
     println(tx.prettyPrint)
     assert(tx.prettyPrint == transactionJson)
+    val decodedTx = tx.convertTo[Order]
+    println(decodedTx)
   }
 }
