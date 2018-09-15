@@ -53,23 +53,23 @@ object TransactionEntity {
   def props = Props(new TransactionEntity)
 
   sealed trait TransactionCommand
-  final case class AddTransaction(transaction: Order) extends TransactionCommand
+  final case class AddTransaction(order: Order) extends TransactionCommand
   final case class GetTransaction(id: TransactionId) extends TransactionCommand
-  final case class UpdateTransaction(id: TransactionId, transaction: Order) extends TransactionCommand
+  final case class UpdateTransaction(id: TransactionId, order: Order) extends TransactionCommand
 
   sealed trait TransactionEvent {
     val id: TransactionId
-    val transaction: Order
+    val order: Order
   }
-  final case class TransactionAdded(id: TransactionId, transaction: Order) extends TransactionEvent
-  final case class TransactionUpdated(id: TransactionId, transaction: Order) extends TransactionEvent
+  final case class TransactionAdded(id: TransactionId, order: Order) extends TransactionEvent
+  final case class TransactionUpdated(id: TransactionId, order: Order) extends TransactionEvent
   final case class TransactionNotFound(id: TransactionId) extends RuntimeException(s"No Transaction found with id: $id")
 
   type MaybeTransaction[+A] = Either[TransactionNotFound, A]
 
   final case class TransactionState(history: Map[TransactionId, Order]) {
     def apply(id: TransactionId): MaybeTransaction[Order] = history.get(id).toRight(TransactionNotFound(id))
-    def +(event: TransactionEvent): TransactionState = TransactionState(history.updated(event.id, event.transaction))
+    def +(event: TransactionEvent): TransactionState = TransactionState(history.updated(event.id, event.order))
   }
   object TransactionState {
     def apply(): TransactionState = TransactionState(Map.empty)

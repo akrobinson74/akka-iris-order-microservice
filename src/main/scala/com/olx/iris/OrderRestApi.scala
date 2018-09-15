@@ -4,7 +4,7 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server._
 import akka.pattern.ask
 import com.olx.iris.akkaHttp.{MyAkkaConfiguration, SprayRestApi}
-import com.olx.iris.model.{ Order, TransactionEntity, TransactionId}
+import com.olx.iris.model.{Order, TransactionEntity, TransactionId}
 
 import scala.concurrent.Future
 
@@ -26,7 +26,7 @@ trait OrderService extends MyAkkaConfiguration {
 
 trait OrderRestApi extends SprayRestApi with OrderService {
   override def route: Route =
-    pathPrefix("/orders") {
+    pathPrefix("orders") {
       (pathEndOrSingleSlash & post) {
         entity(as[Order]) { transaction =>
           onSuccess(addTransaction(transaction)) { added => complete((StatusCodes.Created, added))
