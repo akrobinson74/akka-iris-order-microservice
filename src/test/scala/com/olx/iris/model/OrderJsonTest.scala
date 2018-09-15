@@ -17,33 +17,8 @@ class OrderJsonTest extends FunSuite with JsonMappings {
       ZoneId.of("UTC")
     )
     val transactionJson = s"""{
-|  "customer": {
-|    "emailAddress": "adam.robinson@olx.com",
-|    "customerType": "BUSINESS",
-|    "lastName": "Robinson",
-|    "firstName": "Adam",
-|    "language": "en-US",
-|    "businessName": "I'm Awesome",
-|    "address": {
-|      "houseNumber": "7001",
-|      "city": "New Orleans",
-|      "state": "LA",
-|      "zipCode": "70126",
-|      "country": "USA",
-|      "addressLines": ["addressLine1", "addressLine2"],
-|      "region": "Deep South",
-|      "street": "Neptune Ct"
-|    },
-|    "userId": "1"
-|  },
+|  "source": "ONLINE",
 |  "orderId": "1",
-|  "paymentReference": {
-|    "amount": {
-|      "currency": "USD",
-|      "amount": 100.0
-|    },
-|    "executionTime": "${now}"
-|  },
 |  "products": [{
 |    "name": "A really cool product",
 |    "expirationTime": "${expiry}",
@@ -60,7 +35,34 @@ class OrderJsonTest extends FunSuite with JsonMappings {
 |    "packageId": "0",
 |    "activationTime": "${now}",
 |    "grossPrice": 0.0
-|  }]
+|  }],
+|  "paymentReference": {
+|    "amount": {
+|      "currency": "USD",
+|      "value": 100.0
+|    },
+|    "executionTime": "${now}"
+|  },
+|  "status": "ACTIVE",
+|  "customer": {
+|    "emailAddress": "adam.robinson@olx.com",
+|    "lastName": "Robinson",
+|    "firstName": "Adam",
+|    "language": "en-US",
+|    "businessName": "I'm Awesome",
+|    "address": {
+|      "houseNumber": "7001",
+|      "city": "New Orleans",
+|      "state": "LA",
+|      "zipCode": "70126",
+|      "country": "USA",
+|      "addressLines": ["addressLine1", "addressLine2"],
+|      "region": "Deep South",
+|      "street": "Neptune Ct"
+|    },
+|    "userId": "1",
+|    "type": "BUSINESS"
+|  }
 |}""".stripMargin
 
     val tx = new Order(
@@ -77,18 +79,19 @@ class OrderJsonTest extends FunSuite with JsonMappings {
           zipCode = "70126"
         ),
         businessName = Option[String]("I'm Awesome"),
-        customerType = CustomerType.BUSINESS,
         emailAddress = "adam.robinson@olx.com",
         firstName = "Adam",
         language = "en-US",
         lastName = "Robinson",
+        `type` = CustomerType.BUSINESS,
         userId = "1",
         vatNumber = Option.empty
       ),
+      orderId = "1",
       paymentReference = new PaymentReference(
         amount = new MonetaryAmount(
-          amount = BigDecimal("100.0"),
-          currency = "USD"
+          currency = "USD",
+          value = BigDecimal("100.0")
         ),
         executionTime = now
       ),
@@ -112,7 +115,8 @@ class OrderJsonTest extends FunSuite with JsonMappings {
           units = BigInt("100")
         )
       ),
-      orderId = "1"
+      source = "ONLINE",
+      status = Status.ACTIVE
     ).toJson
 
     println(tx.prettyPrint)

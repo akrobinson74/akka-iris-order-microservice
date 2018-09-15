@@ -4,5 +4,7 @@ final case class Order(
   customer: Customer,
   orderId: String,
   paymentReference: PaymentReference,
-  products: List[Product]
+  products: List[Product],
+  source: String,
+  status: Status
 )

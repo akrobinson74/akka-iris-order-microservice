@@ -16,25 +16,23 @@ class TransactionEntity extends PersistentActor {
   override def persistenceId: String = "transaction"
 
   override def receiveCommand: Receive = {
-    case AddTransaction(transaction) =>
-      handleEvent(TransactionAdded(TransactionId(), transaction)) pipeTo sender()
+    case AddOrder(transaction) =>
+      handleEvent(OrderAdded(TransactionId(), transaction)) pipeTo sender()
       ()
-    case GetTransaction(id) =>
+    case GetOrder(id) =>
       sender() ! state(id)
-    case UpdateTransaction(id, transaction) =>
+    case UpdateOrder(id, transaction) =>
       state(id) match {
         case response @ Left(_) => sender() ! response
         case Right(_) =>
-          handleEvent(TransactionUpdated(id, transaction)) pipeTo sender()
+          handleEvent(OrderUpdated(id, transaction)) pipeTo sender()
           ()
       }
   }
 
   override def receiveRecover: Receive = {
-    case event: TransactionEvent =>
-      state += event
-    case SnapshotOffer(_, snapshot: TransactionState) =>
-      state = snapshot
+    case event: TransactionEvent                      => state += event
+    case SnapshotOffer(_, snapshot: TransactionState) => state = snapshot
   }
 
   private def handleEvent[E <: TransactionEvent](e: => E): Future[E] = {
@@ -53,22 +51,22 @@ object TransactionEntity {
   def props = Props(new TransactionEntity)
 
   sealed trait TransactionCommand
-  final case class AddTransaction(order: Order) extends TransactionCommand
-  final case class GetTransaction(id: TransactionId) extends TransactionCommand
-  final case class UpdateTransaction(id: TransactionId, order: Order) extends TransactionCommand
+  final case class AddOrder(order: Order) extends TransactionCommand
+  final case class GetOrder(id: TransactionId) extends TransactionCommand
+  final case class UpdateOrder(id: TransactionId, order: Order) extends TransactionCommand
 
   sealed trait TransactionEvent {
     val id: TransactionId
     val order: Order
   }
-  final case class TransactionAdded(id: TransactionId, order: Order) extends TransactionEvent
-  final case class TransactionUpdated(id: TransactionId, order: Order) extends TransactionEvent
+  final case class OrderAdded(id: TransactionId, order: Order) extends TransactionEvent
+  final case class OrderUpdated(id: TransactionId, order: Order) extends TransactionEvent
   final case class TransactionNotFound(id: TransactionId) extends RuntimeException(s"No Transaction found with id: $id")
 
-  type MaybeTransaction[+A] = Either[TransactionNotFound, A]
+  type MaybeOrder[+A] = Either[TransactionNotFound, A]
 
   final case class TransactionState(history: Map[TransactionId, Order]) {
-    def apply(id: TransactionId): MaybeTransaction[Order] = history.get(id).toRight(TransactionNotFound(id))
+    def apply(id: TransactionId): MaybeOrder[Order] = history.get(id).toRight(TransactionNotFound(id))
     def +(event: TransactionEvent): TransactionState = TransactionState(history.updated(event.id, event.order))
   }
   object TransactionState {
