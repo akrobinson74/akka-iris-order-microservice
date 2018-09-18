@@ -65,7 +65,7 @@ class OrderJsonTest extends FunSuite with JsonMappings {
 |  }
 |}""".stripMargin
 
-    val tx = new Order(
+    val origOrder = new Order(
       customer = new Customer(
         address = new Address(
           addressLines = List[String]("addressLine1", "addressLine2"),
@@ -117,11 +117,10 @@ class OrderJsonTest extends FunSuite with JsonMappings {
       ),
       source = "ONLINE",
       status = Status.ACTIVE
-    ).toJson
+    )
+    val tx = origOrder.toJson
 
-    println(tx.prettyPrint)
     assert(tx.prettyPrint == transactionJson)
-    val decodedTx = tx.convertTo[Order]
-    println(decodedTx)
+    assert(origOrder == tx.convertTo[Order])
   }
 }
